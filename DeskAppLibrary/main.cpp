@@ -1,6 +1,8 @@
 #pragma once
 
+#include"WinMain.cpp"
+
 int main()
 {
-	return 0;
+	return wWinMain(NULL, NULL, NULL, SW_SHOW);
 }
