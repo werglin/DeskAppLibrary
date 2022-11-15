@@ -22,9 +22,4 @@
       <Filter>Kaynak Dosyalar</Filter>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="WinMain.h">
-      <Filter>Üst Bilgi Dosyaları</Filter>
-    </ClInclude>
-  </ItemGroup>
 </Project>
