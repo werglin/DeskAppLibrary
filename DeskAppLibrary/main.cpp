@@ -1,4 +1,7 @@
 #pragma once
+// main document : https://learn.microsoft.com/en-us/windows/win32/directx
+// last document : https://learn.microsoft.com/en-us/windows/win32/learnwin32/render-targets--devices--and-resources
+// helper document : https://learn.microsoft.com/en-us/windows/win32/api/_direct2d/
 
 #include"MainWin.h"
 
