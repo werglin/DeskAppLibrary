@@ -1,12 +1,12 @@
 #pragma once
 
-#include"WinMain.cpp"
+#include"MainWin.h"
 
-int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)
+int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR, int nCmdShow)
 {
     MainWindow win;
 
-    if (!win.Create(_T("Learn to Program Windows"), WS_OVERLAPPEDWINDOW))
+    if (!win.Create(L"Circle", WS_OVERLAPPEDWINDOW))
     {
         return 0;
     }
@@ -18,7 +18,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow
     MSG msg = { };
     while (GetMessage(&msg, NULL, 0, 0))
     {
-        TranslateMessage(&msg); 
+        TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
 
