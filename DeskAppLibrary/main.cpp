@@ -1,6 +1,6 @@
 #pragma once
 // main document : https://learn.microsoft.com/en-us/windows/win32/directx
-// last document : https://learn.microsoft.com/en-us/windows/win32/learnwin32/dpi-and-device-independent-pixels
+// last document : https://learn.microsoft.com/en-us/windows/win32/learnwin32/applying-transforms-in-direct2d
 // helper document : https://learn.microsoft.com/en-us/windows/win32/api/_direct2d/
 // performance helper : https://learn.microsoft.com/en-us/windows/win32/direct2d/improving-direct2d-performance
 // To make program scale with screensize (ex: texts)
