@@ -30,4 +30,9 @@
       <Filter>Üst Bilgi Dosyaları</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Xml Include="DPIAware.xml">
+      <Filter>Kaynak Dosyaları</Filter>
+    </Xml>
+  </ItemGroup>
 </Project>

@@ -1,5 +1,5 @@
 #include "MainWin.h"
-
+#include <iostream>
 template <class T>
 void SafeRelease(T** ppT)
 {
@@ -28,7 +28,7 @@ void MainWindow::CalculateLayout()
                 ,ellipse.point.y - (ellipse.radiusY / 2)
                 ,ellipse.point.x + (ellipse.radiusX / 2),
                 ellipse.point.y + (ellipse.radiusY / 2) };
-        rR = D2D1::RoundedRect(rectRr, 1.0f, 1.0f);
+        rR = D2D1::RoundedRect(rectRr, this->XroundRect, this->YroundRect);
     }
 }
 
@@ -113,6 +113,19 @@ MainWindow::MainWindow() : pFactory(NULL), pRenderTarget(NULL), pBrush(NULL)
 {
 }
 
+// i will use these later
+void MainWindow::DecreaseRadius()
+{
+    this->XroundRect -= this->changeRoundVal;
+    this->YroundRect -= this->changeRoundVal;
+}
+
+void MainWindow::IncreaseRadius()
+{
+    this->XroundRect += this->changeRoundVal;
+    this->YroundRect += this->changeRoundVal;
+}
+//--------------------------------------------
 LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (uMsg)

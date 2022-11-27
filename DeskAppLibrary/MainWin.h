@@ -12,12 +12,17 @@ class MainWindow : public BaseWindow<MainWindow>
     D2D1_ELLIPSE            ellipse;
     //Tryin somethin
     D2D1_ROUNDED_RECT rR;
+    float XroundRect = 1.0f;
+    float YroundRect = 1.0f;
+    float changeRoundVal = 0.002f;
 
     void    CalculateLayout();
     HRESULT CreateGraphicsResources();
     void    DiscardGraphicsResources();
     void    OnPaint();
     void    Resize();
+    void    DecreaseRadius();
+    void    IncreaseRadius();
 
 public:
 
