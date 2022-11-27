@@ -25,7 +25,7 @@ void MainWindow::CalculateLayout()
         //tryin 
         D2D1_RECT_F rectRr = { 
                 ellipse.point.x-(ellipse.radiusX/2)
-                ,ellipse.point.y - (ellipse.radiusY / 2)
+                ,0
                 ,ellipse.point.x + (ellipse.radiusX / 2),
                 ellipse.point.y + (ellipse.radiusY / 2) };
         rR = D2D1::RoundedRect(rectRr, this->XroundRect, this->YroundRect);
@@ -53,7 +53,7 @@ HRESULT MainWindow::CreateGraphicsResources()
             hr = pRenderTarget->CreateSolidColorBrush(color, &pBrush);
 
 
-            if (SUCCEEDED(hr) && SUCCEEDED( pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Aqua), &pBrushRect) ))
+            if (SUCCEEDED(hr) && SUCCEEDED( pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(1.0f,0,1.0f,0.5f), &pBrushRect) ))
             {
                 // added brush for rect
                 CalculateLayout();
