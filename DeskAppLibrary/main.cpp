@@ -2,6 +2,7 @@
 // main document : https://learn.microsoft.com/en-us/windows/win32/directx
 // last document : https://learn.microsoft.com/en-us/windows/win32/learnwin32/dpi-and-device-independent-pixels
 // helper document : https://learn.microsoft.com/en-us/windows/win32/api/_direct2d/
+// performance helper : https://learn.microsoft.com/en-us/windows/win32/direct2d/improving-direct2d-performance
 // To make program scale with screensize (ex: texts)
 /*
 * On the Project menu, click Property.
