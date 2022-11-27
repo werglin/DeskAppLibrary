@@ -22,6 +22,13 @@ void MainWindow::CalculateLayout()
         const float y = size.height / 2;
         const float radius = min(x, y);
         ellipse = D2D1::Ellipse(D2D1::Point2F(x, y), radius, radius);
+        //tryin 
+        D2D1_RECT_F rectRr = { 
+                ellipse.point.x-(ellipse.radiusX/2)
+                ,ellipse.point.y - (ellipse.radiusY / 2)
+                ,ellipse.point.x + (ellipse.radiusX / 2),
+                ellipse.point.y + (ellipse.radiusY / 2) };
+        rR = D2D1::RoundedRect(rectRr, 1.0f, 1.0f);
     }
 }
 
@@ -31,22 +38,24 @@ HRESULT MainWindow::CreateGraphicsResources()
     if (pRenderTarget == NULL)
     {
         RECT rc;
-        GetClientRect(m_hwnd, &rc);
+        GetClientRect(m_hwnd, &rc); // Screen size to rect
 
-        D2D1_SIZE_U size = D2D1::SizeU(rc.right, rc.bottom);
+        D2D1_SIZE_U size = D2D1::SizeU(rc.right, rc.bottom); // rect to directx type size
 
-        hr = pFactory->CreateHwndRenderTarget(
-            D2D1::RenderTargetProperties(),
-            D2D1::HwndRenderTargetProperties(m_hwnd, size),
-            &pRenderTarget);
+        hr = pFactory->CreateHwndRenderTarget( // factory makes the render target
+            D2D1::RenderTargetProperties(), // default props
+            D2D1::HwndRenderTargetProperties(m_hwnd, size),  // my props
+            &pRenderTarget);    // target
 
         if (SUCCEEDED(hr))
         {
-            const D2D1_COLOR_F color = D2D1::ColorF(1.0f, 1.0f, 0);
+            const D2D1_COLOR_F color = D2D1::ColorF(1.0f, 1.0f, 0); // solid ellipse color
             hr = pRenderTarget->CreateSolidColorBrush(color, &pBrush);
 
-            if (SUCCEEDED(hr))
+
+            if (SUCCEEDED(hr) && SUCCEEDED( pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Aqua), &pBrushRect) ))
             {
+                // added brush for rect
                 CalculateLayout();
             }
         }
@@ -58,6 +67,7 @@ void MainWindow::DiscardGraphicsResources()
 {
     SafeRelease(&pRenderTarget);
     SafeRelease(&pBrush);
+    SafeRelease(&pBrushRect);
 }
 
 void MainWindow::OnPaint()
@@ -68,15 +78,16 @@ void MainWindow::OnPaint()
         PAINTSTRUCT ps;
         BeginPaint(m_hwnd, &ps);
 
-        pRenderTarget->BeginDraw();
+        pRenderTarget->BeginDraw();// simply a message which tells we are starting to draw
 
-        pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::SkyBlue));
-        pRenderTarget->FillEllipse(ellipse, pBrush);
+        //pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::SkyBlue));  // paints background skyblue , default is black
+        pRenderTarget->FillEllipse(ellipse, pBrush);  // paints ellips
+        pRenderTarget->FillRoundedRectangle(rR,pBrushRect); // paints roundedrect
 
-        hr = pRenderTarget->EndDraw();
-        if (FAILED(hr) || hr == D2DERR_RECREATE_TARGET)
+        hr = pRenderTarget->EndDraw(); // end message
+        if (FAILED(hr) || hr == D2DERR_RECREATE_TARGET) // if there is a problem 
         {
-            DiscardGraphicsResources();
+            DiscardGraphicsResources(); // just let resources go
         }
         EndPaint(m_hwnd, &ps);
     }
