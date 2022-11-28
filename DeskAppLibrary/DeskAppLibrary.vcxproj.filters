@@ -31,8 +31,8 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="DPIAware.xml">
+    <Manifest Include="DPIAware.manifest">
       <Filter>Kaynak Dosyaları</Filter>
-    </Xml>
+    </Manifest>
   </ItemGroup>
 </Project>

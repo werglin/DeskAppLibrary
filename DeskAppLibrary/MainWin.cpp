@@ -1,5 +1,5 @@
 #include "MainWin.h"
-#include <iostream>
+#include<assert.h>
 template <class T>
 void SafeRelease(T** ppT)
 {
@@ -15,8 +15,7 @@ void SafeRelease(T** ppT)
 
 void MainWindow::CalculateLayout()
 {
-    if (pRenderTarget != NULL)
-    {
+    assert(pRenderTarget != NULL);
         D2D1_SIZE_F size = pRenderTarget->GetSize();
         const float x = size.width / 2;
         const float y = size.height / 2;
@@ -25,18 +24,19 @@ void MainWindow::CalculateLayout()
         //tryin 
         D2D1_RECT_F rectRr = { 
                 ellipse.point.x-(ellipse.radiusX/2)
-                ,0
+                ,ellipse.point.y + ellipse.radiusY
                 ,ellipse.point.x + (ellipse.radiusX / 2),
                 ellipse.point.y + (ellipse.radiusY / 2) };
         rR = D2D1::RoundedRect(rectRr, this->XroundRect, this->YroundRect);
-    }
+    
 }
+
 
 HRESULT MainWindow::CreateGraphicsResources()
 {
     HRESULT hr = S_OK;
-    if (pRenderTarget == NULL)
-    {
+    assert(pRenderTarget == NULL);
+    
         RECT rc;
         GetClientRect(m_hwnd, &rc); // Screen size to rect
 
@@ -59,7 +59,7 @@ HRESULT MainWindow::CreateGraphicsResources()
                 CalculateLayout();
             }
         }
-    }
+    
     return hr;
 }
 
@@ -82,7 +82,17 @@ void MainWindow::OnPaint()
 
         //pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::SkyBlue));  // paints background skyblue , default is black
         pRenderTarget->FillEllipse(ellipse, pBrush);  // paints ellips
+
+        // change transform everytime
+        SYSTEMTIME time;
+        GetLocalTime(&time);
+
+        const float fMinuteAngle = (360.0f / 60) * (time.wMinute);
+        pRenderTarget->SetTransform( D2D1::Matrix3x2F::Rotation(fMinuteAngle, ellipse.point) );
         pRenderTarget->FillRoundedRectangle(rR,pBrushRect); // paints roundedrect
+
+
+        pRenderTarget->SetTransform( D2D1::Matrix3x2F::Identity() );
 
         hr = pRenderTarget->EndDraw(); // end message
         if (FAILED(hr) || hr == D2DERR_RECREATE_TARGET) // if there is a problem 
@@ -95,8 +105,7 @@ void MainWindow::OnPaint()
 
 void MainWindow::Resize()
 {
-    if (pRenderTarget != NULL)
-    {
+    assert(pRenderTarget != NULL);
         RECT rc;
         GetClientRect(m_hwnd, &rc);
 
@@ -105,7 +114,6 @@ void MainWindow::Resize()
         pRenderTarget->Resize(size);
         CalculateLayout();
         InvalidateRect(m_hwnd, NULL, FALSE);
-    }
 }
 
 
@@ -119,6 +127,8 @@ void MainWindow::DecreaseRadius()
     this->XroundRect -= this->changeRoundVal;
     this->YroundRect -= this->changeRoundVal;
 }
+
+
 
 void MainWindow::IncreaseRadius()
 {
