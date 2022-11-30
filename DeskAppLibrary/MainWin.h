@@ -14,7 +14,9 @@ class MainWindow : public BaseWindow<MainWindow>
     D2D1_ROUNDED_RECT rR;
     float XroundRect = 1.0f;
     float YroundRect = 1.0f;
-    float changeRoundVal = 0.002f;
+    const float changeRoundVal = 0.002f;
+    float rotateDeg = 0;
+    bool cCc = true;
 
     void    CalculateLayout();
     HRESULT CreateGraphicsResources();

@@ -15,28 +15,28 @@ void SafeRelease(T** ppT)
 
 void MainWindow::CalculateLayout()
 {
-    assert(pRenderTarget != NULL);
+    if (pRenderTarget != NULL) {
         D2D1_SIZE_F size = pRenderTarget->GetSize();
         const float x = size.width / 2;
         const float y = size.height / 2;
         const float radius = min(x, y);
         ellipse = D2D1::Ellipse(D2D1::Point2F(x, y), radius, radius);
         //tryin 
-        D2D1_RECT_F rectRr = { 
-                ellipse.point.x-(ellipse.radiusX/2)
+        D2D1_RECT_F rectRr = {
+                ellipse.point.x - (ellipse.radiusX / 2)
                 ,ellipse.point.y + ellipse.radiusY
                 ,ellipse.point.x + (ellipse.radiusX / 2),
                 ellipse.point.y + (ellipse.radiusY / 2) };
         rR = D2D1::RoundedRect(rectRr, this->XroundRect, this->YroundRect);
-    
+    }
 }
 
 
 HRESULT MainWindow::CreateGraphicsResources()
 {
     HRESULT hr = S_OK;
-    assert(pRenderTarget == NULL);
-    
+    if (pRenderTarget == NULL) {
+
         RECT rc;
         GetClientRect(m_hwnd, &rc); // Screen size to rect
 
@@ -53,13 +53,13 @@ HRESULT MainWindow::CreateGraphicsResources()
             hr = pRenderTarget->CreateSolidColorBrush(color, &pBrush);
 
 
-            if (SUCCEEDED(hr) && SUCCEEDED( pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(1.0f,0,1.0f,0.5f), &pBrushRect) ))
+            if (SUCCEEDED(hr) && SUCCEEDED(pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(1.0f, 0, 1.0f, 0.5f), &pBrushRect)))
             {
                 // added brush for rect
                 CalculateLayout();
             }
         }
-    
+    }
     return hr;
 }
 
@@ -84,12 +84,10 @@ void MainWindow::OnPaint()
         pRenderTarget->FillEllipse(ellipse, pBrush);  // paints ellips
 
         // change transform everytime
-        SYSTEMTIME time;
-        GetLocalTime(&time);
+        pRenderTarget->SetTransform( D2D1::Matrix3x2F::Rotation(rotateDeg, ellipse.point) );
 
-        const float fMinuteAngle = (360.0f / 60) * (time.wMinute);
-        pRenderTarget->SetTransform( D2D1::Matrix3x2F::Rotation(fMinuteAngle, ellipse.point) );
         pRenderTarget->FillRoundedRectangle(rR,pBrushRect); // paints roundedrect
+        pRenderTarget->DrawRoundedRectangle(rR, pBrushRect);
 
 
         pRenderTarget->SetTransform( D2D1::Matrix3x2F::Identity() );
@@ -100,12 +98,15 @@ void MainWindow::OnPaint()
             DiscardGraphicsResources(); // just let resources go
         }
         EndPaint(m_hwnd, &ps);
+
+        
     }
 }
 
 void MainWindow::Resize()
 {
-    assert(pRenderTarget != NULL);
+    if (pRenderTarget != NULL)
+    {
         RECT rc;
         GetClientRect(m_hwnd, &rc);
 
@@ -114,6 +115,8 @@ void MainWindow::Resize()
         pRenderTarget->Resize(size);
         CalculateLayout();
         InvalidateRect(m_hwnd, NULL, FALSE);
+
+    }
 }
 
 
@@ -138,6 +141,17 @@ void MainWindow::IncreaseRadius()
 //--------------------------------------------
 LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+    if (rotateDeg >= 290.0f)
+    {
+        cCc = false;
+    }
+    else if (rotateDeg <= -50.f)
+    {
+        cCc = true;
+    }
+
+    cCc ? rotateDeg += ( changeRoundVal * 10 ) : rotateDeg -= ( changeRoundVal*10 );
+
     switch (uMsg)
     {
     case WM_CREATE:
@@ -164,6 +178,12 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         Resize();
         return 0;
     }
+
+    //if (pFactory != NULL)
+    //{
+      //  OnPaint();
+    //}
+    
     return DefWindowProc(m_hwnd, uMsg, wParam, lParam);
 }
 
