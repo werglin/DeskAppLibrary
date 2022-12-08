@@ -56,6 +56,7 @@ public:
         wc.lpfnWndProc = DERIVED_TYPE::WindowProc;
         wc.hInstance = GetModuleHandle(NULL);
         wc.lpszClassName = ClassName();
+        wc.style = CS_DBLCLKS;
 
         RegisterClass(&wc);
 

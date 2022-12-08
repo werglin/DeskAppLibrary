@@ -1,4 +1,5 @@
 #include "MainWin.h"
+#include "DPIScale.cpp"
 #include<assert.h>
 template <class T>
 void SafeRelease(T** ppT)
@@ -131,6 +132,12 @@ void MainWindow::DecreaseRadius()
     this->YroundRect -= this->changeRoundVal;
 }
 
+void MainWindow::OnLButtonDown(int pixelX, int pixelY, DWORD flags)
+{
+    const float dipX = DPIScale::PixelsToDipsX(pixelX);
+    const float dipY = DPIScale::PixelsToDipsY(pixelY);
+}
+
 
 
 void MainWindow::IncreaseRadius()
@@ -158,8 +165,10 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         if (FAILED(D2D1CreateFactory(
             D2D1_FACTORY_TYPE_SINGLE_THREADED, &pFactory)))
         {
+            MessageBox(NULL, L"File: MainWin -- Line: 161", L"Error", MB_ICONERROR | MB_OK);
             return -1;  // Fail CreateWindowEx.
         }
+        DPIScale::Initialize(MainWindow::BaseWindow::m_hwnd);
         return 0;
 
     case WM_DESTROY:
@@ -167,22 +176,27 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         SafeRelease(&pFactory);
         PostQuitMessage(0);
         return 0;
+        
+    case WM_LBUTTONDOWN:
+        IncreaseRadius();
+        return 0;
+
+    case WM_RBUTTONDOWN:
+        DecreaseRadius();
+        
+        return 0;
 
     case WM_PAINT:
         OnPaint();
         return 0;
-
-
-
+    /*case WM_DISPLAYCHANGE:
+        OnPaint();
+        return 0;
+        */
     case WM_SIZE:
         Resize();
         return 0;
     }
-
-    //if (pFactory != NULL)
-    //{
-      //  OnPaint();
-    //}
     
     return DefWindowProc(m_hwnd, uMsg, wParam, lParam);
 }

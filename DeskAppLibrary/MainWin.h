@@ -5,6 +5,8 @@
 
 class MainWindow : public BaseWindow<MainWindow>
 {
+private:
+
     ID2D1Factory* pFactory;
     ID2D1HwndRenderTarget* pRenderTarget;
     ID2D1SolidColorBrush* pBrush;
@@ -18,6 +20,8 @@ class MainWindow : public BaseWindow<MainWindow>
     float rotateDeg = 0;
     bool cCc = true;
 
+private:
+
     void    CalculateLayout();
     HRESULT CreateGraphicsResources();
     void    DiscardGraphicsResources();
@@ -25,6 +29,19 @@ class MainWindow : public BaseWindow<MainWindow>
     void    Resize();
     void    DecreaseRadius();
     void    IncreaseRadius();
+
+    //SetMode(Mode m)
+
+    void    OnLButtonDown(int pixelX, int pixelY, DWORD flags);
+
+private:
+
+    enum Mode
+    {
+        Draw,
+        Select,
+        Drag
+    };
 
 public:
 
